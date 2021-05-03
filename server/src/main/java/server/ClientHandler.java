@@ -32,6 +32,8 @@ public class ClientHandler {
                     while (true) {
                         String str = in.readUTF();
 
+                        Server.logger.info("Клиент прислал команду " + str);
+
                         if (str.equals("/end")) {
                             out.writeUTF("/end");
                             throw new RuntimeException("Клиент решил отключиться");
@@ -51,8 +53,10 @@ public class ClientHandler {
                                     nickname = newNick;
                                     sendMsg("/auth_ok " + nickname);
                                     server.subscribe(this);
-                                    System.out.println("Client authenticated. nick: " + nickname +
+                                    Server.logger.info("Client authenticated. nick: " + nickname +
                                             " Address: " + socket.getRemoteSocketAddress());
+//                                    System.out.println("Client authenticated. nick: " + nickname +
+//                                            " Address: " + socket.getRemoteSocketAddress());
                                     socket.setSoTimeout(0);
                                     break;
                                 } else {
@@ -81,6 +85,8 @@ public class ClientHandler {
                     //цикл работы
                     while (true) {
                         String str = in.readUTF();
+
+                        Server.logger.info("Клиент прислал команду " + str);
 
                         if (str.startsWith("/")) {
                             if (str.equals("/end")) {
@@ -124,7 +130,8 @@ public class ClientHandler {
                     e.printStackTrace();
                 } finally {
                     server.unsubscribe(this);
-                    System.out.println("client disconnect " + socket.getRemoteSocketAddress());
+                    Server.logger.info("client disconnect " + socket.getRemoteSocketAddress());
+//                    System.out.println("client disconnect " + socket.getRemoteSocketAddress());
                     try {
                         socket.close();
                     } catch (IOException e) {
